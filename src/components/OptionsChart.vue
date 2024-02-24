@@ -22,7 +22,7 @@ export default {
       { year: 2013, count: 25 },
       { year: 2014, count: 22 },
       { year: 2015, count: 30 },
-      { year: 2016, count: 28 },
+      { year: 2016, count: 20 },
     ];
 
     new Chart(

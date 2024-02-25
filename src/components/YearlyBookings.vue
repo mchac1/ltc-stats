@@ -37,8 +37,7 @@ export default {
   },
   methods: {
     async fetchTypeData(reservationType) {
-      // const url = new URL(`http://localhost:3000/api/tennis/getReservationsByType?Type=${reservationType}`);
-      const url = new URL(`https://ltc-stats-api-production.up.railway.app/api/tennis/getReservationsByType?Type=${reservationType}`);
+      const url = new URL(`${import.meta.env.VITE_MONGODB_URI}/getReservationsByType?Type=${reservationType}`);
       return fetch(url)
         .then((response) => {
           return response.json();

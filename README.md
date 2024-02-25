@@ -27,3 +27,12 @@ npm run dev
 ```sh
 npm run build
 ```
+
+### Deploy code changes to gh-pages
+
+Open git bash from here: C:\Users\mchardyc\my_projects\delme\vitetest\vue-project
+```sh
+git add dist -f
+git commit -m "something"
+git subtree push --prefix dist origin gh-pages
+```

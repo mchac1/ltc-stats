@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     async fetchTypeData(reservationType) {
-      const url = new URL(`http://localhost:3000/api/players/getReservationsByType?Type=${reservationType}`);
+      const url = new URL(`http://localhost:3000/api/tennis/getReservationsByType?Type=${reservationType}`);
       return fetch(url)
         .then((response) => {
           return response.json();

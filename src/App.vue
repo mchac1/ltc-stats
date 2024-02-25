@@ -2,9 +2,9 @@
 import HelloWorld from './components/HelloWorld.vue'
 // import TheWelcome from './components/TheWelcome.vue'
 // import OptionsTry from './components/OptionsTry.vue'
-import OptionsChart from './components/OptionsChart.vue'
+// import OptionsChart from './components/OptionsChart.vue'
 // import CourtUsageChart from './components/CourtUsageChart.vue'
-// import YearlyBookings from './components/YearlyBookings.vue'
+import YearlyBookings from './components/YearlyBookings.vue'
 // import IndividualBookingCountsChart from './components/IndividualBookingCountsChart.vue'
 // import FamilyPlayingTimeChart from './components/FamilyPlayingTimeChart.vue'
 </script>
@@ -22,11 +22,11 @@ import OptionsChart from './components/OptionsChart.vue'
   <main>
     <!-- <TheWelcome /> -->
     <!-- <OptionsTry msg="Welcome to Your Vue.js App"/> -->
-    <OptionsChart msg="Welcome to Your Vue.js App"/>
-    <!-- <FamilyPlayingTimeChart />
-    <IndividualBookingCountsChart />
-    <CourtUsageChart />
-    <YearlyBookings /> -->
+    <!-- <OptionsChart msg="Welcome to Your Vue.js App"/> -->
+    <!-- <FamilyPlayingTimeChart /> -->
+    <!-- <IndividualBookingCountsChart /> -->
+    <!-- <CourtUsageChart /> -->
+    <YearlyBookings />
   </main>
 </template>
 

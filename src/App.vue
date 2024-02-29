@@ -5,7 +5,7 @@ import HelloWorld from './components/HelloWorld.vue'
 // import OptionsChart from './components/OptionsChart.vue'
 import CourtUsageChart from './components/CourtUsageChart.vue'
 import YearlyBookings from './components/YearlyBookings.vue'
-// import IndividualBookingCountsChart from './components/IndividualBookingCountsChart.vue'
+import MemberPlayingTimeChart from './components/MemberPlayingTimeChart.vue'
 import FamilyPlayingTimeChart from './components/FamilyPlayingTimeChart.vue'
 </script>
 
@@ -23,9 +23,9 @@ import FamilyPlayingTimeChart from './components/FamilyPlayingTimeChart.vue'
     <!-- <TheWelcome /> -->
     <!-- <OptionsTry msg="Welcome to Your Vue.js App"/> -->
     <!-- <OptionsChart msg="Welcome to Your Vue.js App"/> -->
+    <MemberPlayingTimeChart />
     <CourtUsageChart />
     <FamilyPlayingTimeChart />
-    <!-- <IndividualBookingCountsChart /> -->
     <!-- <div style = "text-align:center;">
       <YearlyBookings />
     </div> -->

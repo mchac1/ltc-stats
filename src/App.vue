@@ -3,10 +3,10 @@ import HelloWorld from './components/HelloWorld.vue'
 // import TheWelcome from './components/TheWelcome.vue'
 // import OptionsTry from './components/OptionsTry.vue'
 // import OptionsChart from './components/OptionsChart.vue'
-// import CourtUsageChart from './components/CourtUsageChart.vue'
+import CourtUsageChart from './components/CourtUsageChart.vue'
 import YearlyBookings from './components/YearlyBookings.vue'
 // import IndividualBookingCountsChart from './components/IndividualBookingCountsChart.vue'
-// import FamilyPlayingTimeChart from './components/FamilyPlayingTimeChart.vue'
+import FamilyPlayingTimeChart from './components/FamilyPlayingTimeChart.vue'
 </script>
 
 <template>
@@ -23,14 +23,17 @@ import YearlyBookings from './components/YearlyBookings.vue'
     <!-- <TheWelcome /> -->
     <!-- <OptionsTry msg="Welcome to Your Vue.js App"/> -->
     <!-- <OptionsChart msg="Welcome to Your Vue.js App"/> -->
-    <!-- <FamilyPlayingTimeChart /> -->
+    <CourtUsageChart />
+    <FamilyPlayingTimeChart />
     <!-- <IndividualBookingCountsChart /> -->
-    <!-- <CourtUsageChart /> -->
+    <!-- <div style = "text-align:center;">
+      <YearlyBookings />
+    </div> -->
     <YearlyBookings />
   </main>
 </template>
 
-<style scoped>
+<!-- <style scoped>
 header {
   line-height: 1.5;
 }
@@ -57,4 +60,4 @@ header {
     flex-wrap: wrap;
   }
 }
-</style>
+</style> -->

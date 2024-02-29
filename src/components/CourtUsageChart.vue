@@ -1,7 +1,9 @@
 <template>
-  <div class="hello">
-    <!-- <canvas id="myChart" width="400" height="150"></canvas> -->
-    <canvas id="myChart" width="800"></canvas>
+  <div style="border:1px solid black; padding: 25px; margin-bottom: 50px; text-align:center;">
+    <h2>{{ mapTitle }}</h2>
+    <!-- <canvas id="CourtUsageChart" width="400" height="150"></canvas> -->
+    <!-- <canvas id="CourtUsageChart" width="800"></canvas> -->
+    <canvas id="CourtUsageChart" width="1080" height="650"></canvas>
   </div>
 </template>
 
@@ -12,13 +14,14 @@ export default {
   name: 'CourtUsageChart',
   data() {
     return {
+      mapTitle: 'Reservations by Court (2023)',
       singlesData: [],
       doublesData: [],
     }
   },
   methods: {
     async fetchSinglesData() {
-      const url = new URL(`http://localhost:3000/api/players/getReservationsByType?Type=Singles`);
+      const url = new URL(`${import.meta.env.VITE_MONGODB_URI}/getReservationsByType?Type=Singles`);
       return fetch(url)
         .then((response) => {
           return response.json();
@@ -30,7 +33,8 @@ export default {
         });
     },
     async fetchDoublesData() {
-      const url = new URL(`http://localhost:3000/api/players/getReservationsByType?Type=Doubles`);
+      // const url = new URL(`http://localhost:3000/api/players/getReservationsByType?Type=Doubles`);
+      const url = new URL(`${import.meta.env.VITE_MONGODB_URI}/getReservationsByType?Type=Doubles`);
       return fetch(url)
         .then((response) => {
           return response.json();
@@ -100,16 +104,21 @@ export default {
     });
 
     new Chart(
-      document.getElementById('myChart'),
+      document.getElementById('CourtUsageChart'),
       {
         type: 'bar',
         options: {
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Reservations by Court (2023)'
-                }
-            }
+          elements: {
+              bar: {
+                  borderWidth: 2,
+              }
+          },
+          plugins: {
+              title: {
+                  display: true,
+                  // text: 'Reservations by Court (2023)'
+              }
+          }
         },
         data: {
           labels: singlesByCourt.map(row => row.court),

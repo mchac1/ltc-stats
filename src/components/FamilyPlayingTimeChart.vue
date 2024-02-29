@@ -1,11 +1,17 @@
 <template>
-    <div>
+    <!-- <div> -->
+    <!-- <div style = "text-align:center;"> -->
+    <div style="border:1px solid black; padding: 25px; margin-bottom: 50px; text-align:center;">
+        <h2>{{ mapTitle }}</h2>
         <button @click="renderChart" value="">All-time</button>
         <button @click="renderChart" value="2023">2023</button>
         <button @click="renderChart" value="2022">2022</button>
         <button @click="renderChart" value="2021">2021</button>
         <button @click="renderChart" value="2020">2020</button>
-      <canvas id="FamilyPlayingTimeChart" width="800" height="800"></canvas>
+      <!-- <canvas id="FamilyPlayingTimeChart" width="800" height="800"></canvas> -->
+      <!-- <canvas id="FamilyPlayingTimeChart" width="1080" height="800" style="border:1px solid black; padding: 25px; margin-bottom: 50px;"></canvas> -->
+      <!-- <canvas id="FamilyPlayingTimeChart" width="1080" height="600"></canvas> -->
+      <canvas id="FamilyPlayingTimeChart" width="1080" height="650"></canvas>
     </div>
   </template>
   
@@ -16,6 +22,7 @@
     name: 'FamilyPlayingTimeChart',
     data() {
       return {
+        mapTitle: '',
         singlesData: [],
         familyBookingsData: [],
         currentChart: null,
@@ -28,9 +35,10 @@
             await this.configureChart(event.target._value);
         },
         async fetchFamilyBookingsData(year) {
-            let urlAddress = `http://localhost:3000/api/players/getFamilyHours`;
+            let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getFamilyHours`;
+            // const url = new URL(`${import.meta.env.VITE_MONGODB_URI}/getReservationsByType?Type=${reservationType}`);
             if (year) {
-                urlAddress = `http://localhost:3000/api/players/getFamilyHours?Year=${year}`;
+                urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getFamilyHours?Year=${year}`;
             }
             const url = new URL(urlAddress);
             return fetch(url)
@@ -40,7 +48,8 @@
                 console.log('CAM data')
                 console.log(data)
                 // Just get top 20
-                this.familyBookingsData = data.slice(0, 20);
+                // this.familyBookingsData = data.slice(0, 20);
+                this.familyBookingsData = data.slice(0, 15);
             });
         },
         async configureChart(year) {
@@ -48,9 +57,9 @@
 
             console.log(this.familyBookingsData)
 
-            let mapTitle = 'Top Hours on Court by Family (All-time)';
+            this.mapTitle = 'Top Hours on Court by Family (All-time)';
             if (year) {
-                mapTitle = `Top Hours on Court by Family (${year})`;
+                this.mapTitle = `Top Hours on Court by Family (${year})`;
             }
 
             this.chartConfig = {
@@ -81,15 +90,16 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: mapTitle
+                            // text: mapTitle
                         }
                     },
+                    // barThickness: 25,
                     scales: {
                         x: {
                             stacked: true,
                         },
                         y: {
-                            stacked: true
+                            stacked: true,
                         }
                     }
                 },

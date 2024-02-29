@@ -1,9 +1,20 @@
 <template>
-  <div class="hello">
+  <!-- <div class="hello"> -->
     <!-- <canvas id="YearlyBookingsChart" width="400" height="150"></canvas> -->
     <!-- <canvas id="YearlyBookingsChart" width="800" height="500"></canvas> -->
-    <canvas id="YearlyBookingsChart" width="800"></canvas>
-  </div>
+    <!-- <canvas id="YearlyBookingsChart" width="800"></canvas> -->
+    <!-- <canvas id="YearlyBookingsChart"></canvas> -->
+    <!-- <canvas id="YearlyBookingsChart" width="880" height="440" style="border:1px dashed orangered; margin: 25px;"> -->
+    <!-- <canvas id="YearlyBookingsChart" width="880" height="440"></canvas> -->
+    <!-- <div style = "text-align:center;"> -->
+    <div style="border:1px solid black; padding: 25px; margin-bottom: 50px; text-align:center;">
+      <h2>{{ mapTitle }}</h2>
+      <!-- <canvas id="YearlyBookingsChart" width="880" height="440"></canvas> -->
+      <!-- <canvas id="YearlyBookingsChart" width="1080" height="540" style="border:1px solid black; padding: 25px; margin: 50px;"></canvas> -->
+      <canvas id="YearlyBookingsChart" width="1080" height="650"></canvas>
+    </div>
+    <!-- <button>Redo</button> -->
+  <!-- </div> -->
 </template>
 
 <script>
@@ -13,6 +24,7 @@ export default {
   name: 'YearlyBookings',
   data() {
     return {
+      mapTitle: 'Reservation Type by Year',
       singlesData: [],
       doublesData: [],
       machineData: [],
@@ -77,7 +89,7 @@ export default {
     proms.push(this.fetchTypeData('Ball Machine'));
     // proms.push(this.fetchTypeData('Hopper'));  // none since 2020 for some reason?
     proms.push(this.fetchTypeData('Backboard (only court 8)'));
-    proms.push(this.fetchTypeData('Court Maintenance'));
+    // proms.push(this.fetchTypeData('Court Maintenance'));
     proms.push(this.fetchTypeData('Private Lesson'));
 
     await Promise.all(proms);
@@ -90,7 +102,7 @@ export default {
             plugins: {
                 title: {
                     display: true,
-                    text: 'Reservations by Year'
+                    // text: 'Reservations by Year'
                 }
             }
         },

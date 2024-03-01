@@ -1,9 +1,12 @@
 <template>
   <div style="border:1px solid black; padding: 25px; margin-bottom: 50px; text-align:center;">
-    <h2>{{ mapTitle }}</h2>
-    <!-- <canvas id="CourtUsageChart" width="400" height="150"></canvas> -->
-    <!-- <canvas id="CourtUsageChart" width="800"></canvas> -->
-    <canvas id="CourtUsageChart" width="1080" height="650"></canvas>
+      <h2>{{ mapTitle }}</h2>
+      <button @click="renderChart" value="">All-time</button>
+      <button @click="renderChart" value="2023">2023</button>
+      <button @click="renderChart" value="2022">2022</button>
+      <button @click="renderChart" value="2021">2021</button>
+      <button @click="renderChart" value="2020">2020</button>
+      <canvas id="CourtUsageChart" width="1080" height="650"></canvas>
   </div>
 </template>
 
@@ -14,145 +17,90 @@ export default {
   name: 'CourtUsageChart',
   data() {
     return {
-      mapTitle: 'Reservations by Court (2023)',
-      singlesData: [],
-      doublesData: [],
+      mapTitle: '',
+      courtTotalsData: []
     }
   },
   methods: {
-    async fetchSinglesData() {
-      const url = new URL(`${import.meta.env.VITE_MONGODB_URI}/getReservationsByType?Type=Singles`);
-      return fetch(url)
-        .then((response) => {
-          return response.json();
-        }).then((data) => {
-          // Filter for 2023 reservations
-          this.singlesData = data.filter((a) =>{
-            return a['Start Date / Time'].startsWith('2023')
-          });
-        });
+    async renderChart(event) {
+      this.currentChart.destroy();
+      await this.configureChart(event.target._value);
     },
-    async fetchDoublesData() {
-      // const url = new URL(`http://localhost:3000/api/players/getReservationsByType?Type=Doubles`);
-      const url = new URL(`${import.meta.env.VITE_MONGODB_URI}/getReservationsByType?Type=Doubles`);
+    async fetchData(year) {
+      let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getReservationTypeCourtTotals`;
+      if (year) {
+          urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getReservationTypeCourtTotals?Year=${year}`;
+      }
+      const url = new URL(urlAddress);
       return fetch(url)
-        .then((response) => {
+      .then((response) => {
           return response.json();
-        }).then((data) => {
-          // Filter for 2023 reservations
-          this.doublesData = data.filter((a) =>{
-            return a['Start Date / Time'].startsWith('2023')
-          });
-        });
+      }).then((data) => {
+          this.courtTotalsData = data;
+      });
+    },
+    async configureChart(year) {
+      await this.fetchData(year);
+
+      this.mapTitle = 'Court Usage (All-time)';
+      if (year) {
+          this.mapTitle = `Court Usage (${year})`;
+      }
+
+      this.chartConfig = {
+          type: 'bar',
+          data: {
+              labels: this.courtTotalsData.map(a => a.court),
+              datasets: [
+                  {
+                      label: 'Singles',
+                      data: this.courtTotalsData.map(a => a.Singles)
+                  },
+                  {
+                      label: 'Doubles',
+                      data: this.courtTotalsData.map(a => a.Doubles)
+                  },
+                  {
+                      label: 'Ball Machine',
+                      data: this.courtTotalsData.map(a => a["Ball Machine"])
+                  },
+                  {
+                      label: 'Backboard',
+                      data: this.courtTotalsData.map(a => a["Backboard (only court 8)"])
+                  },
+              ]
+          },
+          options: {
+              elements: {
+                  bar: {
+                      borderWidth: 2,
+                  }
+              },
+              responsive: true,
+              plugins: {
+                  title: {
+                      display: true,
+                  }
+              },
+              scales: {
+                  x: {
+                      stacked: true,
+                  },
+                  y: {
+                      stacked: true,
+                  }
+              }
+          },
+      }
+
+      this.currentChart = new Chart(
+          document.getElementById('CourtUsageChart'),
+          this.chartConfig
+      );
     },
   },
   async mounted() {
-    await this.fetchDoublesData();
-
-    // Assemble array with number of bookings by court number
-    const doublesByCourt = [];
-    this.doublesData.forEach((booking) => {
-      const courtMatch = doublesByCourt.find(a => a.court === booking.Courts)
-      if (!courtMatch) {
-        const temp = {
-          court: booking.Courts,
-          count: 1
-        }
-        doublesByCourt.push(temp);
-      } else {
-        courtMatch.count = courtMatch.count + 1;
-      }
-    });
-    
-    // Sort by court number so they display in order
-    doublesByCourt.sort((a, b) => {
-      if (a.court < b.court) {
-        return -1;
-      }
-      if (a.court > b.court) {
-        return 1;
-      }
-      return 0;
-    });
-
-    await this.fetchSinglesData();
-
-    // Assemble array with number of bookings by court number
-    const singlesByCourt = [];
-    this.singlesData.forEach((booking) => {
-      const courtMatch = singlesByCourt.find(a => a.court === booking.Courts)
-      if (!courtMatch) {
-        const temp = {
-          court: booking.Courts,
-          count: 1
-        }
-        singlesByCourt.push(temp);
-      } else {
-        courtMatch.count++;
-      }
-    });
-    
-    // Sort by court number so they display in order
-    singlesByCourt.sort((a, b) => {
-      if (a.court < b.court) {
-        return -1;
-      }
-      if (a.court > b.court) {
-        return 1;
-      }
-      return 0;
-    });
-
-    new Chart(
-      document.getElementById('CourtUsageChart'),
-      {
-        type: 'bar',
-        options: {
-          elements: {
-              bar: {
-                  borderWidth: 2,
-              }
-          },
-          plugins: {
-              title: {
-                  display: true,
-                  // text: 'Reservations by Court (2023)'
-              }
-          }
-        },
-        data: {
-          labels: singlesByCourt.map(row => row.court),
-          datasets: [
-            {
-              label: 'Singles',
-              data: singlesByCourt.map(row => row.count)
-            },
-            {
-              label: 'Doubles',
-              data: doublesByCourt.map(row => row.count)
-            }
-          ]
-        }
-      }
-    );
+    await this.configureChart('2023');
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-</style>

@@ -20,6 +20,7 @@ import FamilyPlayingTimeChart from './components/FamilyPlayingTimeChart.vue'
   <!-- </header> -->
 
   <main>
+    <h1 style="text-align:center; margin: 20px;">LTC Data Analysis</h1>
     <!-- <TheWelcome /> -->
     <!-- <OptionsTry msg="Welcome to Your Vue.js App"/> -->
     <!-- <OptionsChart msg="Welcome to Your Vue.js App"/> -->

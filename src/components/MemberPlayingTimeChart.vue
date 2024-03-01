@@ -6,10 +6,10 @@
         <button @click="renderChart" value="2022">2022</button>
         <button @click="renderChart" value="2021">2021</button>
         <button @click="renderChart" value="2020">2020</button>
-      <!-- <canvas id="MemberPlayingTimeChart" width="800" height="800"></canvas> -->
-      <canvas id="MemberPlayingTimeChart" width="1080" height="650"></canvas>
+        <!-- <canvas id="MemberPlayingTimeChart" width="800" height="800"></canvas> -->
+        <canvas id="MemberPlayingTimeChart" width="1080" height="650"></canvas>
     </div>
-  </template>
+</template>
   
   <script>
   import Chart from 'chart.js/auto';

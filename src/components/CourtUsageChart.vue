@@ -42,9 +42,9 @@ export default {
     async configureChart(year) {
       await this.fetchData(year);
 
-      this.mapTitle = 'Court Usage (All-time)';
+      this.mapTitle = 'Total Bookings by Court (All-time)';
       if (year) {
-          this.mapTitle = `Court Usage (${year})`;
+          this.mapTitle = `Total Bookings by Court (${year})`;
       }
 
       this.chartConfig = {

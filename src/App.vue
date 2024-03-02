@@ -10,7 +10,7 @@
 
   <main>
     <div v-if="authenticated">
-      <h1 class="green" style="text-align:center; margin: 20px;">LTC Data Analysis</h1>
+      <h2 class="green" style="text-align:center; margin: 20px;">LTC Data Analysis</h2>
       <Charts />
     </div>
     <div v-else>

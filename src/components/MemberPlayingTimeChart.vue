@@ -1,6 +1,6 @@
 <template>
     <div style="border:1px solid black; padding: 25px; margin-bottom: 50px; text-align:center;">
-        <h2>{{ mapTitle }}</h2>
+        <h4>{{ mapTitle }}</h4>
         <div v-if="isLoading" class="spinner-border m-5" role="status"></div>
         <div v-else>
             <button @click="renderChart" value="">All-time</button>
@@ -13,7 +13,7 @@
     </div>
 </template>
   
-  <script>
+<script>
   import Chart from 'chart.js/auto';
   
   export default {
@@ -21,7 +21,6 @@
     data() {
       return {
         mapTitle: '',
-        singlesData: [],
         memberBookingsData: [],
         currentChart: null,
         chartConfig: {},
@@ -124,4 +123,4 @@
         this.isLoading = false;
     }
   }
-  </script>
+</script>

@@ -1,21 +1,19 @@
 <template>
-    <!-- <div> -->
-    <!-- <div style = "text-align:center;"> -->
     <div style="border:1px solid black; padding: 25px; margin-bottom: 50px; text-align:center;">
-        <h2>{{ mapTitle }}</h2>
-        <button @click="renderChart" value="">All-time</button>
-        <button @click="renderChart" value="2023">2023</button>
-        <button @click="renderChart" value="2022">2022</button>
-        <button @click="renderChart" value="2021">2021</button>
-        <button @click="renderChart" value="2020">2020</button>
-      <!-- <canvas id="FamilyPlayingTimeChart" width="800" height="800"></canvas> -->
-      <!-- <canvas id="FamilyPlayingTimeChart" width="1080" height="800" style="border:1px solid black; padding: 25px; margin-bottom: 50px;"></canvas> -->
-      <!-- <canvas id="FamilyPlayingTimeChart" width="1080" height="600"></canvas> -->
-      <canvas id="FamilyPlayingTimeChart" width="1080" height="650"></canvas>
+        <h4>{{ mapTitle }}</h4>
+        <div v-if="isLoading" class="spinner-border m-5" role="status"></div>
+        <div v-else>
+            <button @click="renderChart" value="">All-time</button>
+            <button @click="renderChart" value="2023">2023</button>
+            <button @click="renderChart" value="2022">2022</button>
+            <button @click="renderChart" value="2021">2021</button>
+            <button @click="renderChart" value="2020">2020</button>
+        </div>
+        <canvas id="FamilyPlayingTimeChart" width="1080" height="650" :style="chartVisibility"></canvas>
     </div>
-  </template>
+</template>
   
-  <script>
+<script>
   import Chart from 'chart.js/auto';
   
   export default {
@@ -23,20 +21,28 @@
     data() {
       return {
         mapTitle: '',
-        singlesData: [],
         familyBookingsData: [],
         currentChart: null,
         chartConfig: {},
+        isLoading: null,
       }
+    },
+    computed: {
+        chartVisibility() {
+            if (this.isLoading) {
+                return "visibility: hidden;"
+            }
+            return "visibility: visible;"
+        },
     },
     methods: {
         async renderChart(event) {
-            this.currentChart.destroy();
+            this.isLoading = true;
             await this.configureChart(event.target._value);
+            this.isLoading = false;
         },
         async fetchFamilyBookingsData(year) {
             let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getFamilyHours`;
-            // const url = new URL(`${import.meta.env.VITE_MONGODB_URI}/getReservationsByType?Type=${reservationType}`);
             if (year) {
                 urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getFamilyHours?Year=${year}`;
             }
@@ -45,17 +51,12 @@
             .then((response) => {
                 return response.json();
             }).then((data) => {
-                console.log('CAM data')
-                console.log(data)
-                // Just get top 20
-                // this.familyBookingsData = data.slice(0, 20);
+                // Just get top 15
                 this.familyBookingsData = data.slice(0, 15);
             });
         },
         async configureChart(year) {
             await this.fetchFamilyBookingsData(year);
-
-            console.log(this.familyBookingsData)
 
             this.mapTitle = 'Top Hours on Court by Family (All-time)';
             if (year) {
@@ -90,10 +91,8 @@
                     plugins: {
                         title: {
                             display: true,
-                            // text: mapTitle
                         }
                     },
-                    // barThickness: 25,
                     scales: {
                         x: {
                             stacked: true,
@@ -105,6 +104,10 @@
                 },
             }
 
+            if (this.currentChart) {
+                this.currentChart.destroy();
+            }
+
             this.currentChart = new Chart(
                 document.getElementById('FamilyPlayingTimeChart'),
                 this.chartConfig
@@ -112,26 +115,9 @@
         }
     },
     async mounted() {
+        this.isLoading = true;
         await this.configureChart('2023');
+        this.isLoading = false;
     }
   }
-  </script>
-  
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
-  <style scoped>
-  h3 {
-    margin: 40px 0 0;
-  }
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-  a {
-    color: #42b983;
-  }
-  </style>
-  
+</script>

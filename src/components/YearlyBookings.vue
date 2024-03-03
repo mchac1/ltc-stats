@@ -8,7 +8,7 @@
     <!-- <canvas id="YearlyBookingsChart" width="880" height="440"></canvas> -->
     <!-- <div style = "text-align:center;"> -->
     <div style="border:1px solid black; padding: 25px; margin-bottom: 50px; text-align:center;">
-      <h2>{{ mapTitle }}</h2>
+      <h4>{{ mapTitle }}</h4>
       <!-- <canvas id="YearlyBookingsChart" width="880" height="440"></canvas> -->
       <!-- <canvas id="YearlyBookingsChart" width="1080" height="540" style="border:1px solid black; padding: 25px; margin: 50px;"></canvas> -->
       <canvas id="YearlyBookingsChart" width="1080" height="650"></canvas>

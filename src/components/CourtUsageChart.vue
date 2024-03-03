@@ -1,6 +1,6 @@
 <template>
   <div style="border:1px solid black; padding: 25px; margin-bottom: 50px; text-align:center;">
-      <h2>{{ mapTitle }}</h2>
+      <h4>{{ mapTitle }}</h4>
       <button @click="renderChart" value="">All-time</button>
       <button @click="renderChart" value="2023">2023</button>
       <button @click="renderChart" value="2022">2022</button>

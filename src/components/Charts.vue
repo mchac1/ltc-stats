@@ -1,8 +1,8 @@
 <template>
   <div>
     <MemberPlayingTimeChart />
-    <CourtUsageChart />
     <FamilyPlayingTimeChart />
+    <CourtUsageChart />
     <YearlyBookings />
   </div>
 </template>

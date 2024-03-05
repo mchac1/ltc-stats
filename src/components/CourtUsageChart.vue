@@ -1,12 +1,15 @@
 <template>
   <div style="border:1px solid black; padding: 25px; margin-bottom: 50px; text-align:center;">
       <h4>{{ mapTitle }}</h4>
-      <button @click="renderChart" value="">All-time</button>
-      <button @click="renderChart" value="2023">2023</button>
-      <button @click="renderChart" value="2022">2022</button>
-      <button @click="renderChart" value="2021">2021</button>
-      <button @click="renderChart" value="2020">2020</button>
-      <canvas id="CourtUsageChart" width="1080" height="650"></canvas>
+      <div v-if="isLoading" class="spinner-border m-5" role="status"></div>
+      <div v-else>
+        <button @click="renderChart" value="">All-time</button>
+        <button @click="renderChart" value="2023">2023</button>
+        <button @click="renderChart" value="2022">2022</button>
+        <button @click="renderChart" value="2021">2021</button>
+        <button @click="renderChart" value="2020">2020</button>
+      </div>
+      <canvas id="CourtUsageChart" width="1080" height="650" :style="chartVisibility"></canvas>
   </div>
 </template>
 
@@ -18,13 +21,23 @@ export default {
   data() {
     return {
       mapTitle: '',
-      courtTotalsData: []
+      courtTotalsData: [],
+      isLoading: null,
     }
+  },
+  computed: {
+      chartVisibility() {
+          if (this.isLoading) {
+              return "visibility: hidden;"
+          }
+          return "visibility: visible;"
+      },
   },
   methods: {
     async renderChart(event) {
-      this.currentChart.destroy();
+      this.isLoading = true;
       await this.configureChart(event.target._value);
+      this.isLoading = false;
     },
     async fetchData(year) {
       let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getReservationTypeCourtTotals`;
@@ -93,6 +106,10 @@ export default {
           },
       }
 
+      if (this.currentChart) {
+          this.currentChart.destroy();
+      }
+
       this.currentChart = new Chart(
           document.getElementById('CourtUsageChart'),
           this.chartConfig
@@ -100,7 +117,9 @@ export default {
     },
   },
   async mounted() {
+    this.isLoading = true;
     await this.configureChart('2023');
+    this.isLoading = false;
   }
 }
 </script>

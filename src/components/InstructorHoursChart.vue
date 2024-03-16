@@ -81,15 +81,22 @@
                     datasets: [
                         {
                             label: 'Regular Hours',
-                            data: this.memberBookingsData.map(a => a.hoursOnCourt)
-                            // data: this.memberBookingsData.map((a) => {
-                            //     return a.hoursOnCourt - a.primeTimeOnCourt
-                            // })
+                            data: this.memberBookingsData.map(a => a.hoursOnCourt),
+                            backgroundColor: this.memberBookingsData.map((a) => {
+                                if (a.name === 'Denise Fernandez') {
+                                    return "#262F00"
+                                } else if (a.name === 'Marek Nehasil') {
+                                    return "#576905"
+                                } else if (a.name === 'Morgan Waller') {
+                                    return "#CFDE8A"
+                                } else if (a.name === 'Boomer Quangtakoune') {
+                                    return "#F6FAE3"
+                                } else if (a.name === 'Ethel Koh') {
+                                    return "#90A437"
+                                }
+                                return "pink"
+                            }),
                         },
-                        // {
-                        //     label: 'Prime Time Hours',
-                        //     data: this.memberBookingsData.map(a => a.primeTimeOnCourt)
-                        // }
                     ]
                 },
                 options: {

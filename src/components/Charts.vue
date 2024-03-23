@@ -1,5 +1,7 @@
 <template>
   <div>
+    <YearlyLeagueAttendance />
+    <!-- <MensLeagueAttendance /> -->
     <MemberLessonTimeChart />
     <InstructorHoursChart />
     <MemberPlayingTimeChart />
@@ -16,6 +18,8 @@ import MemberLessonTimeChart from './MemberLessonTimeChart.vue'
 import CourtUsageChart from './CourtUsageChart.vue'
 import FamilyPlayingTimeChart from './FamilyPlayingTimeChart.vue'
 import YearlyBookings from './YearlyBookings.vue'
+import MensLeagueAttendance from './MensLeagueAttendance.vue'
+import YearlyLeagueAttendance from './YearlyLeagueAttendance.vue'
 // import { useAuthUserStore } from "@/stores/AuthUserStore";
 // import { mapState, mapActions } from "pinia";
 
@@ -28,6 +32,8 @@ export default {
     CourtUsageChart,
     FamilyPlayingTimeChart,
     YearlyBookings,
+    MensLeagueAttendance,
+    YearlyLeagueAttendance,
   },
 }
 

@@ -1,27 +1,15 @@
 <template>
-  <!-- <div class="hello"> -->
-    <!-- <canvas id="YearlyBookingsChart" width="400" height="150"></canvas> -->
-    <!-- <canvas id="YearlyBookingsChart" width="800" height="500"></canvas> -->
-    <!-- <canvas id="YearlyBookingsChart" width="800"></canvas> -->
-    <!-- <canvas id="YearlyBookingsChart"></canvas> -->
-    <!-- <canvas id="YearlyBookingsChart" width="880" height="440" style="border:1px dashed orangered; margin: 25px;"> -->
-    <!-- <canvas id="YearlyBookingsChart" width="880" height="440"></canvas> -->
-    <!-- <div style = "text-align:center;"> -->
     <div style="border:1px solid black; padding: 25px; margin-bottom: 50px; text-align:center;">
       <h4>{{ mapTitle }}</h4>
-      <!-- <canvas id="YearlyBookingsChart" width="880" height="440"></canvas> -->
-      <!-- <canvas id="YearlyBookingsChart" width="1080" height="540" style="border:1px solid black; padding: 25px; margin: 50px;"></canvas> -->
-      <canvas id="YearlyBookingsChart" width="1080" height="650"></canvas>
+      <canvas id="MensLeagueAttendance" width="1080" height="650"></canvas>
     </div>
-    <!-- <button>Redo</button> -->
-  <!-- </div> -->
 </template>
 
 <script>
 import Chart from 'chart.js/auto';
 
 export default {
-  name: 'YearlyBookings',
+  name: 'MensLeagueAttendance',
   data() {
     return {
       mapTitle: 'Reservation Type by Year',
@@ -48,6 +36,47 @@ export default {
     }
   },
   methods: {
+    async fetchLeagueAttendanceData(year) {
+        let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getLeagueAttendance?EventName=Men%27s%20League`;
+        // let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getLeagueAttendance?EventName=Women%27s%20League`;
+        if (year) {
+            urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getLeagueAttendance?EventName=Men%27s%20League&Year=${year}`;
+            // urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getLeagueAttendance?EventName=Women%27s%20League&Year=${year}`;
+        }
+        const url = new URL(urlAddress);
+        return fetch(url)
+        .then((response) => {
+            return response.json();
+        }).then((data) => {
+
+          data.sort((a, b) => {
+            return Date.parse(a["Start Date / Time"]) - Date.parse(b["Start Date / Time"])
+          });
+
+          console.log('CAM attendance data')
+          console.log(data)
+
+          const massagedData = data.map((a) => {
+            return {
+              memberCount: a["Members Count"],
+              eventDate: Date.parse(a["Start Date / Time"]),
+              label: a["Start Date / Time"].substring(0, 10)
+            }
+          })
+
+          console.log('CAM massagedData')
+          console.log(massagedData)
+
+          this.chartLabels = massagedData.map(row => row.label);
+
+          const oneDataset = {
+            label: "Men's Night",
+            data: massagedData.map(row => row.memberCount)
+          }
+          this.chartDatasets.push(oneDataset);
+
+        });
+    },
     async fetchTypeData(reservationType) {
       const url = new URL(`${import.meta.env.VITE_MONGODB_URI}/getReservationsByType?Type=${reservationType}`);
       return fetch(url)
@@ -74,8 +103,7 @@ export default {
 
           const oneDataset = {
             label: reservationType,
-            data: typeByYear.map(row => row.count),
-            borderWidth: 5
+            data: typeByYear.map(row => row.count)
           }
           this.chartDatasets.push(oneDataset);
         });
@@ -83,20 +111,24 @@ export default {
   },
   async mounted() {
 
+    
+
     const proms = [];
 
-    proms.push(this.fetchTypeData('Singles'));
-    proms.push(this.fetchTypeData('Doubles'));
-    proms.push(this.fetchTypeData('Ball Machine'));
-    // proms.push(this.fetchTypeData('Hopper'));  // none since 2020 for some reason?
-    proms.push(this.fetchTypeData('Backboard (only court 8)'));
-    // proms.push(this.fetchTypeData('Court Maintenance'));
-    proms.push(this.fetchTypeData('Private Lesson'));
+    // proms.push(this.fetchTypeData('Singles'));
+    // proms.push(this.fetchTypeData('Doubles'));
+    // proms.push(this.fetchTypeData('Ball Machine'));
+    // proms.push(this.fetchTypeData('Backboard (only court 8)'));
+    // proms.push(this.fetchTypeData('Private Lesson'));
+    proms.push(this.fetchLeagueAttendanceData('2023'));
 
     await Promise.all(proms);
 
+    console.log('CAM this.chartDatasets')
+    console.log(this.chartDatasets)
+
     new Chart(
-      document.getElementById('YearlyBookingsChart'),
+      document.getElementById('MensLeagueAttendance'),
       {
         type: 'line',
         options: {

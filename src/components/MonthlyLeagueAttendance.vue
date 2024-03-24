@@ -8,7 +8,7 @@
           <button @click="renderChart" value="2021">2021</button>
           <button @click="renderChart" value="2020">2020</button>
       </div>
-      <canvas id="MonthlyLeagueAttendance" width="1080" height="650"  :style="chartVisibility"></canvas>
+      <canvas id="MonthlyLeagueAttendance" width="1080" height="650" :style="chartVisibility"></canvas>
     </div>
 </template>
 

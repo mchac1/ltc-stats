@@ -6,6 +6,7 @@
         <SearchAutocomplete @selectedMember="processPlayer"
         :items="memberJustNames"
         />
+        <button @click="toggleChart" value="485052" :style="buttonVisibility">{{ buttonText }}</button>
         <!-- <button @click="renderChart" value="485052">Chad</button>
         <button @click="renderChart" value="207777">Patrice</button> -->
         <!-- <button @click="renderChart" value="GameType">Game Type</button>
@@ -34,11 +35,21 @@ export default {
       searchMember: '',
       memberItems: [],
       allMembers: [],
+      buttonText: 'Switch to Type Breakdown',
+      currentMember: {},
+      currentType: '',
+      timeToggle: true,
     }
   },
   computed: {
       chartVisibility() {
           if (this.isLoading) {
+              return "visibility: hidden;"
+          }
+          return "visibility: visible;"
+      },
+      buttonVisibility() {
+          if (Object.keys(this.currentMember).length === 0) {
               return "visibility: hidden;"
           }
           return "visibility: visible;"
@@ -54,34 +65,60 @@ export default {
 
       const memberMatch = this.memberItems.find(a => a.dropdownName === member)
       if (memberMatch) {
+        this.currentMember = memberMatch;
         console.log('CAM id')
         console.log(memberMatch.id)
 
         this.isLoading = true;
-        await this.configureChart(memberMatch.id);
+        if (this.timeToggle) {
+          await this.configureChart(memberMatch.id, 'TimeType');
+        } else {
+          await this.configureChart(memberMatch.id, 'GameType');
+        }
         this.isLoading = false;
       }
     },
-    async renderChart(event) {
+    async toggleChart(event) {
+      console.log('CAM into toggleChart')
+      console.log('CAM currentMember')
+      console.log(this.currentMember)
+
+      this.timeToggle = !this.timeToggle;
+
+      // if (this.currentType === 'TimeType') {
+      if (!this.timeToggle) {
         this.isLoading = true;
-        await this.configureChart(event.target._value);
+        this.buttonText = 'Switch to Time Breakdown';
+        await this.configureChart(this.currentMember.id, 'GameType');
         this.isLoading = false;
+      } else {
+        this.isLoading = true;
+        this.buttonText = 'Switch to Type Breakdown';
+        await this.configureChart(this.currentMember.id, 'TimeType');
+        this.isLoading = false;
+      }
     },
-    async configureChart(memberId) {
+    // async renderChart(event) {
+    //     this.isLoading = true;
+    //     await this.configureChart(event.target._value, 'TimeType');
+    //     this.isLoading = false;
+    // },
+    async configureChart(memberId, chartType) {
+
+      this.currentType = chartType;
 
       this.chartLabels = [];
       this.chartDatasets = [];
 
       const proms = [];
 
-      proms.push(this.fetchData(memberId));
+      proms.push(this.fetchData(memberId, chartType));
 
       await Promise.all(proms);
 
-      // this.mapTitle = ''
-
       const memberMatch = this.memberItems.find(a => a.id === memberId)
       if (memberMatch) {
+        this.currentMember = memberMatch;
         console.log('CAM id')
         console.log(memberMatch.id)
 
@@ -89,11 +126,25 @@ export default {
       }
 
       this.chartConfig = {
-        type: 'line',
+        // type: 'line',
+        type: 'bar',
         options: {
             plugins: {
                 title: {
                     display: true,
+                }
+            },
+            elements: {
+                bar: {
+                    borderWidth: 2,
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true,
                 }
             }
         },
@@ -112,7 +163,7 @@ export default {
           this.chartConfig
       );
     },
-    async fetchData(memberId) {
+    async fetchData(memberId, breakdownType) {
         let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getMemberYearlyHours`;
         const url = new URL(urlAddress);
         url.searchParams.append('Member', memberId);
@@ -124,19 +175,43 @@ export default {
 
           this.chartLabels = data.map(row => row.year);
 
-          const oneDataset = {
-            label: 'Total Hours',
-            data: data.map(row => row.hoursOnCourt ),
-            borderWidth: 5
-          }
-          this.chartDatasets.push(oneDataset);
+          if (breakdownType === 'TimeType') {
+            const oneDataset = {
+              label: 'Regular Hours',
+              data: data.map(row => row.hoursOnCourt - row.primetimeHoursOnCourt),
+            }
+            this.chartDatasets.push(oneDataset);
 
-          const anotherDataset = {
-            label: 'Prime Time Hours',
-            data: data.map(row => row.primetimeHoursOnCourt),
-            borderWidth: 5
+            const anotherDataset = {
+              label: 'Prime Time Hours',
+              data: data.map(row => row.primetimeHoursOnCourt),
+            }
+            this.chartDatasets.push(anotherDataset);
+          } else if (breakdownType === 'GameType') {
+            let thisDataset = {
+              label: 'Singles Hours',
+              data: data.map(row => row.singlesHours),
+            }
+            this.chartDatasets.push(thisDataset);
+
+            thisDataset = {
+              label: 'Doubles Hours',
+              data: data.map(row => row.doublesHours),
+            }
+            this.chartDatasets.push(thisDataset);
+
+            thisDataset = {
+              label: 'Lesson Hours',
+              data: data.map(row => row.lessonHours),
+            }
+            this.chartDatasets.push(thisDataset);
+
+            thisDataset = {
+              label: 'Other Hours',
+              data: data.map(row => row.otherHours),
+            }
+            this.chartDatasets.push(thisDataset);
           }
-          this.chartDatasets.push(anotherDataset);
         });
     },
     async fetchAllMembers(name) {
@@ -172,7 +247,7 @@ export default {
   async mounted() {
 
     this.isLoading = true;
-    await this.configureChart('485052');
+    // await this.configureChart('485052', 'TimeType');
     await this.fetchAllMembers();
     this.isLoading = false;
 

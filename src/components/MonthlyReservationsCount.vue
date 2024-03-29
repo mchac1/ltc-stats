@@ -3,12 +3,13 @@
       <h4>{{ mapTitle }}</h4>
       <div v-if="isLoading" class="spinner-border m-5" role="status"></div>
       <div v-else>
-          <button @click="renderChart" value="2023">2023</button>
-          <button @click="renderChart" value="2022">2022</button>
-          <button @click="renderChart" value="2021">2021</button>
-          <button @click="renderChart" value="2020">2020</button>
+        <button @click="renderChart" value="">All-time</button>
+        <button @click="renderChart" value="2023">2023</button>
+        <button @click="renderChart" value="2022">2022</button>
+        <button @click="renderChart" value="2021">2021</button>
+        <button @click="renderChart" value="2020">2020</button>
       </div>
-      <canvas id="MonthlyLeagueAttendance" width="1080" height="650" :style="chartVisibility"></canvas>
+      <canvas id="MonthlyReservationsCount" width="1080" height="650" :style="chartVisibility"></canvas>
     </div>
 </template>
 
@@ -16,7 +17,7 @@
 import Chart from 'chart.js/auto';
 
 export default {
-  name: 'MonthlyLeagueAttendance',
+  name: 'MonthlyReservationsCount',
   data() {
     return {
       mapTitle: 'Average League Attendance by Month (2023)',
@@ -47,15 +48,15 @@ export default {
 
       const proms = [];
 
-      proms.push(this.fetchLeagueAttendanceData("Men's League", year));
-      proms.push(this.fetchLeagueAttendanceData("Women's League", year));
-      proms.push(this.fetchLeagueAttendanceData("Novice League", year));
+      proms.push(this.fetchData(year));
 
       await Promise.all(proms);
 
-      this.mapTitle = `Average League Attendance by Month (${year})`;
+      this.mapTitle = 'Bookings by Month (All-time)';
+      if (year) {
+          this.mapTitle = `Bookings by Month (${year})`;
+      }
 
-      // CAM TODO ensure women's is same color any time year is clicked
       this.chartConfig = {
         type: 'line',
         options: {
@@ -76,16 +77,15 @@ export default {
       }
 
       this.currentChart = new Chart(
-          document.getElementById('MonthlyLeagueAttendance'),
+          document.getElementById('MonthlyReservationsCount'),
           this.chartConfig
       );
 
 
     },
-    async fetchLeagueAttendanceData(eventName, year) {
-        let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getAverageMonthlyAttendance`;
+    async fetchData(year) {
+        let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getReservationCountByMonth`;
         const url = new URL(urlAddress);
-        url.searchParams.append('EventName', eventName);
         url.searchParams.append('Year', year);
 
         return fetch(url)
@@ -93,11 +93,18 @@ export default {
             return response.json();
         }).then((data) => {
 
-          this.chartLabels = data.map(row => row.month);
+          console.log(data)
+
+          this.chartLabels = data.map(row => row._id.month);
+
+          let lineLabel = 'All-time';
+          if (year) {
+            lineLabel = year;
+          }
 
           const oneDataset = {
-            label: eventName,
-            data: data.map(row => row.total / row.count),
+            label: lineLabel,
+            data: data.map(row => row.totalQuantity),
             borderWidth: 5
           }
           this.chartDatasets.push(oneDataset);

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <IndividualPlayingTime />
+    <MonthlyReservationsCount />
     <MonthlyLeagueAttendance />
     <YearlyLeagueAttendance />
     <!-- <MensLeagueAttendance /> -->
@@ -10,6 +10,7 @@
     <FamilyPlayingTimeChart />
     <CourtUsageChart />
     <YearlyBookings />
+    <IndividualPlayingTime />
   </div>
 </template>
 
@@ -24,6 +25,7 @@ import MensLeagueAttendance from './MensLeagueAttendance.vue'
 import YearlyLeagueAttendance from './YearlyLeagueAttendance.vue'
 import MonthlyLeagueAttendance from './MonthlyLeagueAttendance.vue'
 import IndividualPlayingTime from './IndividualPlayingTime.vue'
+import MonthlyReservationsCount from './MonthlyReservationsCount.vue'
 // import { useAuthUserStore } from "@/stores/AuthUserStore";
 // import { mapState, mapActions } from "pinia";
 
@@ -40,6 +42,7 @@ export default {
     YearlyLeagueAttendance,
     MonthlyLeagueAttendance,
     IndividualPlayingTime,
+    MonthlyReservationsCount,
   },
 }
 

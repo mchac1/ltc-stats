@@ -25,6 +25,20 @@ export default {
       chartLabels: [],
       currentChart: null,
       isLoading: null,
+      monthNames: [
+        { num: '01', name: 'January' },
+        { num: '02', name: 'February' },
+        { num: '03', name: 'March' },
+        { num: '04', name: 'April' },
+        { num: '05', name: 'May' },
+        { num: '06', name: 'June' },
+        { num: '07', name: 'July' },
+        { num: '08', name: 'August' },
+        { num: '09', name: 'September' },
+        { num: '10', name: 'October' },
+        { num: '11', name: 'November' },
+        { num: '12', name: 'December' },
+      ]
     }
   },
   computed: {
@@ -93,9 +107,11 @@ export default {
             return response.json();
         }).then((data) => {
 
-          console.log(data)
-
-          this.chartLabels = data.map(row => row._id.month);
+          this.chartLabels = data.map((a) => {
+            const monthNum = a._id.month;
+            const monthMatch = this.monthNames.find(b => b.num === monthNum);
+            return monthMatch.name;
+          });
 
           let lineLabel = 'All-time';
           if (year) {

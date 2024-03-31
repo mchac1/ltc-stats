@@ -30,10 +30,22 @@ export default {
 
           this.chartLabels = data.map(row => row.year);
 
+          let lineColour = null;
+
+          if (eventName === "Women's League") {
+            lineColour = import.meta.env.VITE_WOMENS_COLOUR;
+          } else if (eventName === "Men's League") {
+            lineColour = import.meta.env.VITE_MENS_COLOUR;
+          } else if (eventName === "Novice League") {
+            lineColour = import.meta.env.VITE_NOVICE_COLOUR;
+          }
+
           const oneDataset = {
             label: eventName,
             data: data.map(row => row.total / row.count),
-            borderWidth: 5
+            borderWidth: 5,
+            borderColor: lineColour,
+            backgroundColor: lineColour
           }
           this.chartDatasets.push(oneDataset);
 
@@ -41,6 +53,8 @@ export default {
     },
   },
   async mounted() {
+
+    // console.log(import.meta.env.VITE_WOMENS_COLOUR)
 
     const proms = [];
 

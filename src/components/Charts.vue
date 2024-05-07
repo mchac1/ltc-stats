@@ -1,5 +1,6 @@
 <template>
   <div>
+    <MembersByType />
     <MonthlyReservationsCount />
     <MonthlyLeagueAttendance />
     <YearlyLeagueAttendance />
@@ -26,6 +27,7 @@ import YearlyLeagueAttendance from './YearlyLeagueAttendance.vue'
 import MonthlyLeagueAttendance from './MonthlyLeagueAttendance.vue'
 import IndividualPlayingTime from './IndividualPlayingTime.vue'
 import MonthlyReservationsCount from './MonthlyReservationsCount.vue'
+import MembersByType from './MembersByType.vue'
 // import { useAuthUserStore } from "@/stores/AuthUserStore";
 // import { mapState, mapActions } from "pinia";
 
@@ -43,6 +45,7 @@ export default {
     MonthlyLeagueAttendance,
     IndividualPlayingTime,
     MonthlyReservationsCount,
+    MembersByType,
   },
 }
 

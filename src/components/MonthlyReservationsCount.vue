@@ -20,7 +20,7 @@ export default {
   name: 'MonthlyReservationsCount',
   data() {
     return {
-      mapTitle: 'Average League Attendance by Month (2023)',
+      mapTitle: 'Bookings by Month (2023)',
       chartDatasets: [],
       chartLabels: [],
       currentChart: null,

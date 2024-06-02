@@ -30,7 +30,7 @@ npm run build
 
 ### Deploy code changes to gh-pages
 
-Open git bash from here: C:\Users\mchardyc\my_projects\delme\vitetest\vue-project
+Open git bash from here: C:\Users\mchardyc\my_projects\ltc-stats
 ```sh
 git add dist -f
 git commit -m "something"

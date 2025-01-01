@@ -4,6 +4,7 @@
         <div v-if="isLoading" class="spinner-border m-5" role="status"></div>
         <div v-else>
             <button @click="renderChart" value="">All-time</button>
+            <button @click="renderChart" value="2024">2024</button>
             <button @click="renderChart" value="2023">2023</button>
             <button @click="renderChart" value="2022">2022</button>
             <button @click="renderChart" value="2021">2021</button>
@@ -58,10 +59,8 @@
             .then((response) => {
                 return response.json();
             }).then((data) => {
-                // Sort by amount so biggest ones are at the top
-                // data.sort((a, b) => b.totalQuantity - a.totalQuantity);
-                // Just get top 20
-                this.memberBookingsData = data;
+                // Filter out oddballs where staff/board created a lesson in the system
+                this.memberBookingsData = data.filter(item => item.name !== "Corey Huber" && item.name !== "Josh Hornoi");
             });
         },
         async configureChart(year) {
@@ -162,7 +161,7 @@
     },
     async mounted() {
         this.isLoading = true;
-        await this.configureChart('2023');
+        await this.configureChart('2024');
         this.isLoading = false;
     }
   }

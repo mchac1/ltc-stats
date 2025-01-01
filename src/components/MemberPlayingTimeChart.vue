@@ -4,6 +4,7 @@
         <div v-if="isLoading" class="spinner-border m-5" role="status"></div>
         <div v-else>
             <button @click="renderChart" value="">All-time</button>
+            <button @click="renderChart" value="2024">2024</button>
             <button @click="renderChart" value="2023">2023</button>
             <button @click="renderChart" value="2022">2022</button>
             <button @click="renderChart" value="2021">2021</button>
@@ -29,7 +30,7 @@
         isLoading: null,
         howMany: 15,
         canvasHeight: 650,
-        currentYear: 2023,
+        currentYear: 2024,
       }
     },
     computed: {

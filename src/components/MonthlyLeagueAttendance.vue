@@ -3,6 +3,7 @@
       <h4>{{ mapTitle }}</h4>
       <div v-if="isLoading" class="spinner-border m-5" role="status"></div>
       <div v-else>
+          <button @click="renderChart" value="2024">2024</button>
           <button @click="renderChart" value="2023">2023</button>
           <button @click="renderChart" value="2022">2022</button>
           <button @click="renderChart" value="2021">2021</button>
@@ -19,7 +20,7 @@ export default {
   name: 'MonthlyLeagueAttendance',
   data() {
     return {
-      mapTitle: 'Average League Attendance by Month (2023)',
+      mapTitle: 'Average League Attendance by Month (2024)',
       chartDatasets: [],
       chartLabels: [],
       currentChart: null,
@@ -119,7 +120,7 @@ export default {
   },
   async mounted() {
     this.isLoading = true;
-    await this.configureChart('2023');
+    await this.configureChart('2024');
     this.isLoading = false;
   }
 }

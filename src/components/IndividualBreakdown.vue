@@ -12,7 +12,7 @@
         <!-- <button @click="renderChart" value="GameType">Game Type</button>
         <button @click="renderChart" value="Primetime">Primetime</button> -->
       </div>
-      <canvas id="IndividualPlayingTime" width="1080" height="650" :style="chartVisibility"></canvas>
+      <canvas id="IndividualBreakdown" width="1080" height="650" :style="chartVisibility"></canvas>
     </div>
 </template>
 
@@ -21,7 +21,7 @@ import Chart from 'chart.js/auto';
 import SearchAutocomplete from './SearchAutocomplete.vue'
 
 export default {
-  name: 'IndividualPlayingTime',
+  name: 'IndividualBreakdown',
   components: {
     SearchAutocomplete
   },
@@ -159,7 +159,7 @@ export default {
       }
 
       this.currentChart = new Chart(
-          document.getElementById('IndividualPlayingTime'),
+          document.getElementById('IndividualBreakdown'),
           this.chartConfig
       );
     },
@@ -258,7 +258,7 @@ export default {
     // await Promise.all(proms);
 
     // new Chart(
-    //   document.getElementById('IndividualPlayingTime'),
+    //   document.getElementById('IndividualBreakdown'),
     //   {
     //     type: 'line',
     //     // type: 'bar',

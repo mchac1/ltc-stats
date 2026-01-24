@@ -3,10 +3,8 @@
       <h4>{{ mapTitle }}</h4>
       <div v-if="isLoading" class="spinner-border m-5" role="status"></div>
       <div v-else>
-        <!-- <button @click="renderChart" value="Quantity">Quantity</button>
-        <button @click="renderChart" value="Revenue">Revenue</button> -->
       </div>
-      <canvas id="MembersByTypeChart" width="1080" height="650" :style="chartVisibility"></canvas>
+      <canvas id="MembersTypesByYear" width="1080" height="650" :style="chartVisibility"></canvas>
   </div>
 </template>
 
@@ -14,7 +12,7 @@
 import Chart from 'chart.js/auto';
 
 export default {
-  name: 'MembersByTypeChart',
+  name: 'MembersTypesByYear',
   data() {
     return {
       mapTitle: '',
@@ -39,9 +37,6 @@ export default {
     },
     async fetchMemberTypeData(year) {
       let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getMembersBreakdown`;
-      if (year) {
-          urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getMembersBreakdown?Year=${year}`;
-      }
       const url = new URL(urlAddress);
       return fetch(url)
       .then((response) => {
@@ -54,33 +49,7 @@ export default {
 
         await this.fetchMemberTypeData();
 
-//         #A4C3B2 (Muted Sage Green)
-// #D8A48F (Warm Tan)
-// #8C8FA5 (Soft Slate Blue)
-// #E9C46A (Gentle Mustard)
-// #F4A261 (Subdued Coral)
-// #2A9D8F (Teal Green)
-
-        let colorMap = {
-            "Adult Membership": '#2A9D8F',
-            "Junior Membership": '#F4A261',
-            "Family Membership": '#E9C46A',
-            // "Student Membership": '#8C8FA5',
-            "Student Membership": '#3357FF',
-            "Sponsor Membership": '#D8A48F',
-            "Instant Tennis Graduate": '#A4C3B2',
-        }
-
-        // let colorMap = {
-        //     "Adult Membership": '#FF5733',
-        //     "Junior Membership": '#33FF57',
-        //     "Family Membership": '#3357FF',
-        //     "Student Membership": '#FFC300',
-        //     "Sponsor Membership": '#C70039',
-        //     "Instant Tennis Graduate": '#900C3F',
-        // }
-
-        this.mapTitle = `Membership Totals (${metric})`;
+        this.mapTitle = `Membership Totals by Year`;
 
         // Different membership types should be displayed depending
         // on the metric selected, as some types bring in no revenue
@@ -112,32 +81,6 @@ export default {
                 // "LTC Supporter"
             ],
         }
-        // const memberTypes = {
-        //     "Quantity": [
-        //         "Adult Membership",
-        //         "Junior Membership",
-        //         "Family Membership",
-        //         "Staff Membership",
-        //         "Ace Sponsorship",
-        //         "Smash Sponsorship",
-        //         "Student Membership",
-        //         "End of Season 'Stragglers'",
-        //         "Honorary Membership",
-        //         "Instant Tennis Graduate",
-        //         "LTC Supporter"
-        //     ],
-        //     "Revenue": [
-        //         "Adult Membership",
-        //         "Junior Membership",
-        //         "Family Membership",
-        //         "Ace Sponsorship",
-        //         "Smash Sponsorship",
-        //         "Student Membership",
-        //         "End of Season 'Stragglers'",
-        //         "Instant Tennis Graduate",
-        //         "LTC Supporter"
-        //     ],
-        // }
 
         let datasets = []
 
@@ -145,14 +88,33 @@ export default {
             datasets.push({
                 label: b,
                 data: this.memberTotalsData.map(a => a[metric][b]),
-                backgroundColor: colorMap[b]
+                tension: 0.3
             })
         })
 
+        const allLabels = this.memberTotalsData.map(a => a.Year)
+
+        // Get totals for each year to add to the chart
+        const totalMembershipsPerYear = allLabels.map((_, index) => {
+            return datasets.reduce((sum, ds) => {
+                const value = ds.data[index];
+                return sum + (typeof value === "number" ? value : 0);
+            }, 0);
+        });
+
+        datasets.push({
+            label: "Total",
+            data: totalMembershipsPerYear,
+            borderWidth: 3,
+            borderDash: [6, 4],
+            pointRadius: 4,
+            tension: 0.3
+        });
+
       this.chartConfig = {
-          type: 'bar',
+          type: 'line',
           data: {
-              labels: this.memberTotalsData.map(a => a.Year),
+              labels: allLabels,
               datasets: datasets
           },
           options: {
@@ -167,14 +129,6 @@ export default {
                       display: true,
                   }
               },
-              scales: {
-                  x: {
-                      stacked: true,
-                  },
-                  y: {
-                      stacked: true,
-                  }
-              }
           },
       }
 
@@ -183,7 +137,7 @@ export default {
       }
 
       this.currentChart = new Chart(
-          document.getElementById('MembersByTypeChart'),
+          document.getElementById('MembersTypesByYear'),
           this.chartConfig
       );
     },

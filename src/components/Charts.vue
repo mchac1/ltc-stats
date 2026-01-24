@@ -1,51 +1,60 @@
 <template>
   <div>
+    <MemberTypesByYear />
+    <InstructorsByYear />
+    <TimeslotUsageWeekdays />
+    <TimeslotUsageWeekends />
     <MembersByType />
     <MonthlyReservationsCount />
     <MonthlyLeagueAttendance />
     <YearlyLeagueAttendance />
-    <!-- <MensLeagueAttendance /> -->
     <MemberLessonTimeChart />
     <InstructorHoursChart />
     <MemberPlayingTimeChart />
     <FamilyPlayingTimeChart />
     <CourtUsageChart />
     <YearlyBookings />
-    <IndividualPlayingTime />
+    <IndividualBreakdown />
   </div>
 </template>
 
 <script>
+import MemberTypesByYear from './MemberTypesByYear.vue'
+import InstructorsByYear from './InstructorsByYear.vue'
 import InstructorHoursChart from './InstructorHoursChart.vue'
 import MemberPlayingTimeChart from './MemberPlayingTimeChart.vue'
 import MemberLessonTimeChart from './MemberLessonTimeChart.vue'
 import CourtUsageChart from './CourtUsageChart.vue'
 import FamilyPlayingTimeChart from './FamilyPlayingTimeChart.vue'
 import YearlyBookings from './YearlyBookings.vue'
-import MensLeagueAttendance from './MensLeagueAttendance.vue'
 import YearlyLeagueAttendance from './YearlyLeagueAttendance.vue'
 import MonthlyLeagueAttendance from './MonthlyLeagueAttendance.vue'
-import IndividualPlayingTime from './IndividualPlayingTime.vue'
+import IndividualBreakdown from './IndividualBreakdown.vue'
 import MonthlyReservationsCount from './MonthlyReservationsCount.vue'
 import MembersByType from './MembersByType.vue'
+import TimeslotUsageWeekdays from './TimeslotUsageWeekdays.vue'
+import TimeslotUsageWeekends from './TimeslotUsageWeekends.vue'
 // import { useAuthUserStore } from "@/stores/AuthUserStore";
 // import { mapState, mapActions } from "pinia";
 
 export default {
   name: 'Charts',
   components: {
+    MemberTypesByYear,
+    InstructorsByYear,
     InstructorHoursChart,
     MemberPlayingTimeChart,
     MemberLessonTimeChart,
     CourtUsageChart,
     FamilyPlayingTimeChart,
     YearlyBookings,
-    MensLeagueAttendance,
     YearlyLeagueAttendance,
     MonthlyLeagueAttendance,
-    IndividualPlayingTime,
+    IndividualBreakdown,
     MonthlyReservationsCount,
     MembersByType,
+    TimeslotUsageWeekdays,
+    TimeslotUsageWeekends,
   },
 }
 

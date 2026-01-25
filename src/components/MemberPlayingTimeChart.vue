@@ -70,7 +70,6 @@
                     }))
                 ];
                 this.mostRecentYear = data[0].years[0];
-                console.log(this.mostRecentYear)
             });
         },
         async fetchMemberBookingsData(year) {

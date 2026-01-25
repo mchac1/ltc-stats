@@ -5,7 +5,7 @@
     <TimeslotUsageWeekdays />
     <TimeslotUsageWeekends />
     <MembersByType />
-    <MonthlyReservationsCount />
+    <BookingsByMonth />
     <MonthlyLeagueAttendance />
     <YearlyLeagueAttendance />
     <MemberLessonTimeChart />
@@ -30,7 +30,7 @@ import YearlyBookings from './YearlyBookings.vue'
 import YearlyLeagueAttendance from './YearlyLeagueAttendance.vue'
 import MonthlyLeagueAttendance from './MonthlyLeagueAttendance.vue'
 import IndividualBreakdown from './IndividualBreakdown.vue'
-import MonthlyReservationsCount from './MonthlyReservationsCount.vue'
+import BookingsByMonth from './BookingsByMonth.vue'
 import MembersByType from './MembersByType.vue'
 import TimeslotUsageWeekdays from './TimeslotUsageWeekdays.vue'
 import TimeslotUsageWeekends from './TimeslotUsageWeekends.vue'
@@ -51,7 +51,7 @@ export default {
     YearlyLeagueAttendance,
     MonthlyLeagueAttendance,
     IndividualBreakdown,
-    MonthlyReservationsCount,
+    BookingsByMonth,
     MembersByType,
     TimeslotUsageWeekdays,
     TimeslotUsageWeekends,

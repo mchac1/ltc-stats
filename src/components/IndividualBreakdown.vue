@@ -7,10 +7,6 @@
         :items="memberJustNames"
         />
         <button @click="toggleChart" value="485052" :style="buttonVisibility">{{ buttonText }}</button>
-        <!-- <button @click="renderChart" value="485052">Chad</button>
-        <button @click="renderChart" value="207777">Patrice</button> -->
-        <!-- <button @click="renderChart" value="GameType">Game Type</button>
-        <button @click="renderChart" value="Primetime">Primetime</button> -->
       </div>
       <canvas id="IndividualBreakdown" width="1080" height="650" :style="chartVisibility"></canvas>
     </div>
@@ -60,14 +56,9 @@ export default {
   },
   methods: {
     async processPlayer(member) {
-      console.log('CAM member')
-      console.log(member)
-
       const memberMatch = this.memberItems.find(a => a.dropdownName === member)
       if (memberMatch) {
         this.currentMember = memberMatch;
-        console.log('CAM id')
-        console.log(memberMatch.id)
 
         this.isLoading = true;
         if (this.timeToggle) {
@@ -79,13 +70,8 @@ export default {
       }
     },
     async toggleChart(event) {
-      console.log('CAM into toggleChart')
-      console.log('CAM currentMember')
-      console.log(this.currentMember)
-
       this.timeToggle = !this.timeToggle;
 
-      // if (this.currentType === 'TimeType') {
       if (!this.timeToggle) {
         this.isLoading = true;
         this.buttonText = 'Switch to Time Breakdown';
@@ -98,11 +84,6 @@ export default {
         this.isLoading = false;
       }
     },
-    // async renderChart(event) {
-    //     this.isLoading = true;
-    //     await this.configureChart(event.target._value, 'TimeType');
-    //     this.isLoading = false;
-    // },
     async configureChart(memberId, chartType) {
 
       this.currentType = chartType;
@@ -119,14 +100,10 @@ export default {
       const memberMatch = this.memberItems.find(a => a.id === memberId)
       if (memberMatch) {
         this.currentMember = memberMatch;
-        console.log('CAM id')
-        console.log(memberMatch.id)
-
         this.mapTitle = `Individual Playing Time - ${memberMatch.name}`;
       }
 
       this.chartConfig = {
-        // type: 'line',
         type: 'bar',
         options: {
             plugins: {
@@ -220,7 +197,6 @@ export default {
         .then((response) => {
           return response.json();
         }).then((data) => {
-          // console.log(data)
           this.allMembers = data
 
           data.sort(function(a, b) {
@@ -229,10 +205,6 @@ export default {
               return fullNameA.localeCompare(fullNameB);
           });
 
-          // const memberNames = data.map((a) => {
-          //   return `${a["First Name"]} ${a["Last Name"]} - ${a["Member #"]}`
-          // })
-
           this.memberItems = data.map((a) => {
             return {
               dropdownName: `${a["First Name"]} ${a["Last Name"]} - ${a["Member #"]}`,
@@ -240,41 +212,13 @@ export default {
               id: a["Member #"]
             }
           })
-
         });
     },
   },
   async mounted() {
-
     this.isLoading = true;
-    // await this.configureChart('485052', 'TimeType');
     await this.fetchAllMembers();
     this.isLoading = false;
-
-    // const proms = [];
-
-    // proms.push(this.fetchData("485052"));
-
-    // await Promise.all(proms);
-
-    // new Chart(
-    //   document.getElementById('IndividualBreakdown'),
-    //   {
-    //     type: 'line',
-    //     // type: 'bar',
-    //     options: {
-    //         plugins: {
-    //             title: {
-    //                 display: true,
-    //             }
-    //         },
-    //     },
-    //     data: {
-    //       labels: this.chartLabels,
-    //       datasets: this.chartDatasets
-    //     }
-    //   }
-    // );
   }
 }
 </script>

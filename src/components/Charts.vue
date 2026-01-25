@@ -13,8 +13,9 @@
     <MemberPlayingTimeChart />
     <FamilyPlayingTimeChart />
     <CourtUsageChart />
-    <YearlyBookings />
+    <ReservationTypeByYear />
     <IndividualBreakdown />
+    <!-- <IndividualMemberSummary /> -->
   </div>
 </template>
 
@@ -26,7 +27,7 @@ import MemberPlayingTimeChart from './MemberPlayingTimeChart.vue'
 import MemberLessonTimeChart from './MemberLessonTimeChart.vue'
 import CourtUsageChart from './CourtUsageChart.vue'
 import FamilyPlayingTimeChart from './FamilyPlayingTimeChart.vue'
-import YearlyBookings from './YearlyBookings.vue'
+import ReservationTypeByYear from './ReservationTypeByYear.vue'
 import YearlyLeagueAttendance from './YearlyLeagueAttendance.vue'
 import MonthlyLeagueAttendance from './MonthlyLeagueAttendance.vue'
 import IndividualBreakdown from './IndividualBreakdown.vue'
@@ -34,6 +35,7 @@ import BookingsByMonth from './BookingsByMonth.vue'
 import MembersByType from './MembersByType.vue'
 import TimeslotUsageWeekdays from './TimeslotUsageWeekdays.vue'
 import TimeslotUsageWeekends from './TimeslotUsageWeekends.vue'
+// import IndividualMemberSummary from './IndividualMemberSummary.vue'
 // import { useAuthUserStore } from "@/stores/AuthUserStore";
 // import { mapState, mapActions } from "pinia";
 
@@ -47,7 +49,7 @@ export default {
     MemberLessonTimeChart,
     CourtUsageChart,
     FamilyPlayingTimeChart,
-    YearlyBookings,
+    ReservationTypeByYear,
     YearlyLeagueAttendance,
     MonthlyLeagueAttendance,
     IndividualBreakdown,
@@ -55,6 +57,7 @@ export default {
     MembersByType,
     TimeslotUsageWeekdays,
     TimeslotUsageWeekends,
+    // IndividualMemberSummary,
   },
 }
 

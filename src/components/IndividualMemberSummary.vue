@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import YearlyBookings from './YearlyBookings.vue'
+import YearlyBookings from './ReservationTypeByYear.vue'
 import SearchAutocomplete from './SearchAutocomplete.vue'
 
 export default {

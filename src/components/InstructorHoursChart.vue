@@ -3,14 +3,14 @@
         <h4>{{ mapTitle }}</h4>
         <div v-if="isLoading" class="spinner-border m-5" role="status"></div>
         <div v-else>
-            <button @click="renderChart" value="">All-time</button>
-            <button @click="renderChart" value="2024">2024</button>
-            <button @click="renderChart" value="2023">2023</button>
-            <button @click="renderChart" value="2022">2022</button>
-            <button @click="renderChart" value="2021">2021</button>
-            <button @click="renderChart" value="2020">2020</button>
+            <button
+                v-for="btn in yearButtons"
+                :key="btn.label"
+                @click="renderChart(btn.value)"
+            >
+                {{ btn.label }}
+            </button>
         </div>
-        <!-- <div style="margin-top: 30px"> -->
         <div style="margin-top: 3%">
             <div class="row">
                 <div class="col">
@@ -33,6 +33,8 @@
         currentChart: null,
         chartConfig: {},
         isLoading: null,
+        mostRecentYear: 0,
+        yearButtons: [],
       }
     },
     computed: {
@@ -44,10 +46,27 @@
         },
     },
     methods: {
-        async renderChart(event) {
+        async renderChart(year) {
             this.isLoading = true;
-            await this.configureChart(event.target._value);
+            await this.configureChart(year);
             this.isLoading = false;
+        },
+        async getAllYears() {
+            let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getAllYears`;
+            const url = new URL(urlAddress);
+            return fetch(url)
+            .then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.yearButtons = [
+                    { label: 'All-time', value: '' },
+                    ...data[0].years.map(year => ({
+                        label: year,
+                        value: year
+                    }))
+                ];
+                this.mostRecentYear = data[0].years[0];
+            });
         },
         async fetchMemberBookingsData(year) {
             let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getInstructorHours`;
@@ -73,7 +92,6 @@
             }
 
             this.chartConfig = {
-                // type: 'bar',
                 type: 'doughnut',
                 data: {
                     labels: this.memberBookingsData.map(a => a.name),
@@ -90,8 +108,14 @@
                                     return "#CFDE8A"
                                 } else if (a.name === 'Boomer Quangtakoune') {
                                     return "#F6FAE3"
+                                } else if (a.name === 'Tin Pon') {
+                                    return "orange"
                                 } else if (a.name === 'Ethel Koh') {
                                     return "#90A437"
+                                } else if (a.name === 'Harmony McMillan') {
+                                    return "blue"
+                                } else if (a.name === 'Irene Pelletier') {
+                                    return "red"
                                 }
                                 return "pink"
                             }),
@@ -100,48 +124,7 @@
                 },
                 options: {
                     maintainAspectRatio: false,
-                    // elements: {
-                    //     bar: {
-                    //         borderWidth: 2,
-                    //     }
-                    // },
-                    // responsive: true,
-                    // plugins: {
-                    //     title: {
-                    //         display: true,
-                    //     }
-                    // },
-                    // scales: {
-                    //     x: {
-                    //         stacked: true,
-                    //     },
-                    //     y: {
-                    //         stacked: true,
-                    //     }
-                    // }
                 },
-                // options: {
-                //     indexAxis: 'y',
-                //     elements: {
-                //         bar: {
-                //             borderWidth: 2,
-                //         }
-                //     },
-                //     responsive: true,
-                //     plugins: {
-                //         title: {
-                //             display: true,
-                //         }
-                //     },
-                //     scales: {
-                //         x: {
-                //             stacked: true,
-                //         },
-                //         y: {
-                //             stacked: true,
-                //         }
-                //     }
-                // },
             }
 
             if (this.currentChart) {
@@ -155,23 +138,18 @@
 
             this.currentChart.canvas.parentNode.style.height = '400px';
             this.currentChart.canvas.parentNode.style.width = '400px';
-            // this.currentChart.canvas.parentNode.style.height = '500px';
-            // this.currentChart.canvas.parentNode.style.width = '500px';
         }
     },
     async mounted() {
         this.isLoading = true;
-        await this.configureChart('2024');
+        await this.getAllYears();
+        await this.configureChart(this.mostRecentYear);
         this.isLoading = false;
     }
   }
 </script>
 
 <style scoped>
-/* .chart-container {
-  display: flex;
-  justify-content: center;
-} */
 
 .MyContainer div {
     margin: 10px auto;
@@ -182,8 +160,4 @@
   text-align: center;
 }
 
-/* canvas {
-  max-width: 400px;
-  max-height: 400px;
-} */
 </style>

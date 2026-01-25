@@ -3,12 +3,13 @@
         <h4>{{ mapTitle }}</h4>
         <div v-if="isLoading" class="spinner-border m-5" role="status"></div>
         <div v-else>
-            <button @click="renderChart" value="">All-time</button>
-            <button @click="renderChart" value="2024">2024</button>
-            <button @click="renderChart" value="2023">2023</button>
-            <button @click="renderChart" value="2022">2022</button>
-            <button @click="renderChart" value="2021">2021</button>
-            <button @click="renderChart" value="2020">2020</button>
+            <button
+                v-for="btn in yearButtons"
+                :key="btn.label"
+                @click="renderChart(btn.value)"
+            >
+                {{ btn.label }}
+            </button>
         </div>
         <canvas id="FamilyPlayingTimeChart" width="1080" height="650" :style="chartVisibility"></canvas>
     </div>
@@ -26,6 +27,8 @@
         currentChart: null,
         chartConfig: {},
         isLoading: null,
+        mostRecentYear: 0,
+        yearButtons: [],
       }
     },
     computed: {
@@ -37,10 +40,27 @@
         },
     },
     methods: {
-        async renderChart(event) {
+        async renderChart(year) {
             this.isLoading = true;
-            await this.configureChart(event.target._value);
+            await this.configureChart(year);
             this.isLoading = false;
+        },
+        async getAllYears() {
+            let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getAllYears`;
+            const url = new URL(urlAddress);
+            return fetch(url)
+            .then((response) => {
+                return response.json();
+            }).then((data) => {
+                this.yearButtons = [
+                    { label: 'All-time', value: '' },
+                    ...data[0].years.map(year => ({
+                        label: year,
+                        value: year
+                    }))
+                ];
+                this.mostRecentYear = data[0].years[0];
+            });
         },
         async fetchFamilyBookingsData(year) {
             let urlAddress = `${import.meta.env.VITE_MONGODB_URI}/getFamilyHours`;
@@ -117,7 +137,8 @@
     },
     async mounted() {
         this.isLoading = true;
-        await this.configureChart('2024');
+        await this.getAllYears();
+        await this.configureChart(this.mostRecentYear);
         this.isLoading = false;
     }
   }

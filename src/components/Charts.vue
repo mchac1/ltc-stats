@@ -1,5 +1,6 @@
 <template>
   <div>
+    <CourtUsageByYear />
     <MemberTypesByYear />
     <InstructorsByYear />
     <TimeslotUsageWeekdays />
@@ -20,6 +21,7 @@
 </template>
 
 <script>
+import CourtUsageByYear from './CourtUsageByYear.vue'
 import MemberTypesByYear from './MemberTypesByYear.vue'
 import InstructorsByYear from './InstructorsByYear.vue'
 import InstructorHoursChart from './InstructorHoursChart.vue'
@@ -42,6 +44,7 @@ import TimeslotUsageWeekends from './TimeslotUsageWeekends.vue'
 export default {
   name: 'Charts',
   components: {
+    CourtUsageByYear,
     MemberTypesByYear,
     InstructorsByYear,
     InstructorHoursChart,
